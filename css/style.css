@@ -1135,4 +1135,223 @@ body {
         max-height: none;
         overflow-y: visible;
     }
+
+    /* ============================================
+   СТИЛИ ДЛЯ КОММЕНТАРИЕВ
+   ============================================ */
+
+/* Основные стили комментариев */
+.comment-item {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    border: 1px solid #F0F0F0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.comment-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #4361EE, #4CC9F0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.comment-author-info h4 {
+    margin: 0 0 4px 0;
+    color: #333;
+    font-size: 1rem;
+}
+
+.comment-author-info .comment-date {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.comment-likes {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.like-btn:hover {
+    color: #F72585;
+    background: #FFF0F5;
+}
+
+.like-btn.liked {
+    color: #F72585;
+    font-weight: 600;
+}
+
+.comment-content {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    padding-left: 50px; /* Отступ под аватар */
+}
+
+.comment-actions {
+    display: flex;
+    gap: 15px;
+    padding-left: 50px;
+}
+
+.reply-btn, .view-replies-btn {
+    background: none;
+    border: none;
+    color: #4361EE;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.reply-btn:hover, .view-replies-btn:hover {
+    background: #F0F4FF;
+}
+
+/* Ответы на комментарии (вложенные) */
+.comment-replies {
+    margin-left: 50px;
+    margin-top: 15px;
+    padding-left: 20px;
+    border-left: 2px solid #F0F0F0;
+}
+
+.reply-item {
+    background: #F8F9FA;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+/* Форма ответа */
+.reply-form {
+    margin-top: 15px;
+    padding-left: 50px;
+    display: none;
+}
+
+.reply-form.active {
+    display: block;
+}
+
+.reply-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    resize: vertical;
+    font-family: 'Inter', sans-serif;
+}
+
+.reply-form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Адаптивность комментариев */
+@media (max-width: 768px) {
+    .comment-content {
+        padding-left: 0;
+    }
+
+    .comment-actions {
+        padding-left: 0;
+    }
+
+    .reply-form {
+        padding-left: 0;
+    }
+
+    .comment-replies {
+        margin-left: 20px;
+        padding-left: 15px;
+    }
+}
+
+/* Анимации для комментариев */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.comment-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Стили для загрузки */
+.comment-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.comment-loading .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4361EE;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 }

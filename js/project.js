@@ -1,7 +1,627 @@
 ﻿// project.js - страница проекта с обновленным списком сторонников
 document.addEventListener('DOMContentLoaded', function () {
-    // Убираем console.log загрузки
-    // console.log('📄 Загрузка страницы проекта...');
+
+    // ============================================
+    // КОММЕНТАРИИ - ПЕРЕМЕННЫЕ И КОНСТАНТЫ
+    // ============================================
+
+    // Настройки комментариев
+    const COMMENTS_PER_PAGE = 3;
+    let currentCommentPage = 1;
+    let allComments = [];
+    let commentReplies = {}; // Для хранения ответов
+
+    // ============================================
+    // КОММЕНТАРИИ - ИНИЦИАЛИЗАЦИЯ
+    // ============================================
+
+    // Инициализация системы комментариев
+    function initCommentsSystem(projectId) {
+        // Загружаем комментарии
+        loadComments(projectId);
+
+        // Настройка формы добавления комментария
+        setupCommentForm(projectId);
+
+        // Настройка кнопки "Показать ещё"
+        setupLoadMoreButton(projectId);
+    }
+
+    // ============================================
+    // КОММЕНТАРИИ - ЗАГРУЗКА ДАННЫХ
+    // ============================================
+
+    // Загрузка комментариев из базы данных
+    async function loadComments(projectId) {
+        try {
+            const { data: comments, error } = await window.db
+                .from('comments')
+                .select('*')
+                .eq('project_id', projectId)
+                .is('parent_id', null) // Только родительские комментарии
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            // Сохраняем все комментарии
+            allComments = comments || [];
+
+            // Если комментариев нет
+            if (allComments.length === 0) {
+                document.getElementById('noCommentsMessage').style.display = 'block';
+                document.getElementById('commentsList').innerHTML = '';
+                document.getElementById('loadMoreContainer').style.display = 'none';
+                return;
+            }
+
+            // Загружаем ответы для каждого комментария
+            await loadCommentReplies(projectId);
+
+            // Отображаем комментарии
+            displayComments();
+
+        } catch (error) {
+            console.error('Ошибка загрузки комментариев:', error);
+            showCommentError('Не удалось загрузить комментарии');
+        }
+    }
+
+    // Загрузка ответов на комментарии
+    async function loadCommentReplies(projectId) {
+        try {
+            const { data: replies, error } = await window.db
+                .from('comments')
+                .select('*')
+                .eq('project_id', projectId)
+                .not('parent_id', 'is', null)
+                .order('created_at', { ascending: true });
+
+            if (error) throw error;
+
+            // Группируем ответы по родительскому комментарию
+            commentReplies = {};
+            if (replies) {
+                replies.forEach(reply => {
+                    if (!commentReplies[reply.parent_id]) {
+                        commentReplies[reply.parent_id] = [];
+                    }
+                    commentReplies[reply.parent_id].push(reply);
+                });
+            }
+
+        } catch (error) {
+            console.error('Ошибка загрузки ответов:', error);
+        }
+    }
+
+    // ============================================
+    // КОММЕНТАРИИ - ОТОБРАЖЕНИЕ
+    // ============================================
+
+    // Отображение комментариев с пагинацией
+    function displayComments() {
+        const commentsList = document.getElementById('commentsList');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+        const noCommentsMessage = document.getElementById('noCommentsMessage');
+
+        // Скрываем сообщение "нет комментариев"
+        noCommentsMessage.style.display = 'none';
+
+        // Рассчитываем сколько комментариев показывать
+        const startIndex = 0;
+        const endIndex = currentCommentPage * COMMENTS_PER_PAGE;
+        const commentsToShow = allComments.slice(startIndex, endIndex);
+
+        // Если комментариев нет
+        if (commentsToShow.length === 0) {
+            commentsList.innerHTML = '';
+            noCommentsMessage.style.display = 'block';
+            loadMoreContainer.style.display = 'none';
+            return;
+        }
+
+        // Отображаем комментарии
+        commentsList.innerHTML = commentsToShow.map(comment => createCommentHTML(comment)).join('');
+
+        // Показываем/скрываем кнопку "Показать ещё"
+        if (endIndex >= allComments.length) {
+            loadMoreContainer.style.display = 'none';
+        } else {
+            loadMoreContainer.style.display = 'block';
+        }
+
+        // Настраиваем обработчики для кнопок лайков и ответов
+        setupCommentActions();
+    }
+
+    // Создание HTML для комментария
+    function createCommentHTML(comment) {
+        const replies = commentReplies[comment.id] || [];
+        const hasReplies = replies.length > 0;
+        const date = formatCommentDate(comment.created_at);
+        const initial = comment.author_name ? comment.author_name.charAt(0).toUpperCase() : 'А';
+
+        return `
+            <div class="comment-item" data-comment-id="${comment.id}">
+                <div class="comment-header">
+                    <div class="comment-author">
+                        <div class="comment-avatar">${initial}</div>
+                        <div class="comment-author-info">
+                            <h4>${escapeHtml(comment.author_name)}</h4>
+                            <span class="comment-date">${date}</span>
+                        </div>
+                    </div>
+                    <div class="comment-likes">
+                        <button class="like-btn ${comment.likes > 0 ? 'liked' : ''}" data-comment-id="${comment.id}">
+                            <i class="fas fa-heart"></i>
+                            <span class="like-count">${comment.likes}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="comment-content">
+                    ${escapeHtml(comment.content)}
+                </div>
+
+                <div class="comment-actions">
+                    <button class="reply-btn" data-comment-id="${comment.id}">
+                        <i class="fas fa-reply"></i> Ответить
+                    </button>
+
+                    ${hasReplies ? `
+                        <button class="view-replies-btn" data-comment-id="${comment.id}">
+                            <i class="fas fa-comments"></i>
+                            <span class="reply-count">${replies.length}</span> ответов
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    ` : ''}
+                </div>
+
+                <!-- Форма ответа (скрыта по умолчанию) -->
+                <div class="reply-form" id="replyForm-${comment.id}">
+                    <textarea class="reply-content" placeholder="Ваш ответ..." rows="2"></textarea>
+                    <div class="reply-form-actions">
+                        <button class="submit-reply-btn" data-comment-id="${comment.id}" style="background: #4361EE; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.9rem;">
+                            Отправить ответ
+                        </button>
+                        <button class="cancel-reply-btn" data-comment-id="${comment.id}" style="background: #F8F9FA; color: #666; border: 1px solid #E0E0E0; padding: 8px 16px; border-radius: 6px; font-size: 0.9rem;">
+                            Отмена
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Список ответов (скрыт по умолчанию) -->
+                ${hasReplies ? `
+                    <div class="comment-replies" id="replies-${comment.id}" style="display: none;">
+                        ${replies.map(reply => createReplyHTML(reply)).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    // Создание HTML для ответа
+    function createReplyHTML(reply) {
+        const date = formatCommentDate(reply.created_at);
+        const initial = reply.author_name ? reply.author_name.charAt(0).toUpperCase() : 'А';
+
+        return `
+            <div class="reply-item" data-reply-id="${reply.id}">
+                <div class="comment-header">
+                    <div class="comment-author">
+                        <div class="comment-avatar" style="width: 32px; height: 32px; font-size: 0.9rem;">${initial}</div>
+                        <div class="comment-author-info">
+                            <h4 style="font-size: 0.95rem;">${escapeHtml(reply.author_name)}</h4>
+                            <span class="comment-date" style="font-size: 0.8rem;">${date}</span>
+                        </div>
+                    </div>
+                    <div class="comment-likes">
+                        <button class="like-btn ${reply.likes > 0 ? 'liked' : ''}" data-reply-id="${reply.id}" style="font-size: 0.85rem;">
+                            <i class="fas fa-heart"></i>
+                            <span class="like-count">${reply.likes}</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="comment-content" style="font-size: 0.95rem; padding-left: 42px;">
+                    ${escapeHtml(reply.content)}
+                </div>
+            </div>
+        `;
+    }
+
+    // ============================================
+    // КОММЕНТАРИИ - ФОРМЫ И ОБРАБОТКА
+    // ============================================
+
+    // Настройка формы добавления комментария
+    function setupCommentForm(projectId) {
+        const submitBtn = document.getElementById('submitCommentBtn');
+        const authorInput = document.getElementById('commentAuthor');
+        const contentInput = document.getElementById('commentContent');
+        const errorDiv = document.getElementById('commentError');
+
+        if (!submitBtn) return;
+
+        submitBtn.addEventListener('click', async () => {
+            const author = authorInput.value.trim();
+            const content = contentInput.value.trim();
+
+            // Валидация
+            if (!author) {
+                showCommentError('Пожалуйста, введите ваше имя');
+                return;
+            }
+
+            if (!content) {
+                showCommentError('Пожалуйста, введите комментарий');
+                return;
+            }
+
+            if (content.length < 5) {
+                showCommentError('Комментарий должен содержать минимум 5 символов');
+                return;
+            }
+
+            // Скрываем ошибку
+            hideCommentError();
+
+            // Показываем загрузку
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+            submitBtn.disabled = true;
+
+            try {
+                // Отправляем комментарий в базу данных
+                const { data, error } = await window.db
+                    .from('comments')
+                    .insert([{
+                        project_id: projectId,
+                        author_name: author,
+                        content: content,
+                        parent_id: null
+                    }])
+                    .select();
+
+                if (error) throw error;
+
+                // Очищаем форму
+                authorInput.value = '';
+                contentInput.value = '';
+
+                // Добавляем комментарий в начало списка
+                if (data && data[0]) {
+                    allComments.unshift(data[0]);
+                    displayComments();
+
+                    // Показываем уведомление
+                    showNotification('Комментарий успешно добавлен!', 'success');
+                }
+
+            } catch (error) {
+                console.error('Ошибка отправки комментария:', error);
+                showCommentError('Не удалось отправить комментарий. Попробуйте позже.');
+            } finally {
+                // Восстанавливаем кнопку
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить комментарий';
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Отправка по Enter (Shift+Enter для новой строки)
+        contentInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitBtn.click();
+            }
+        });
+    }
+
+    // Настройка кнопки "Показать ещё"
+    function setupLoadMoreButton(projectId) {
+        const loadMoreBtn = document.getElementById('loadMoreCommentsBtn');
+
+        if (!loadMoreBtn) return;
+
+        loadMoreBtn.addEventListener('click', () => {
+            currentCommentPage++;
+            displayComments();
+        });
+    }
+
+    // Настройка действий для комментариев (лайки, ответы)
+    function setupCommentActions() {
+        // Лайки для комментариев
+        document.querySelectorAll('.like-btn[data-comment-id]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.dataset.commentId;
+                toggleCommentLike(commentId, this);
+            });
+        });
+
+        // Лайки для ответов
+        document.querySelectorAll('.like-btn[data-reply-id]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const replyId = this.dataset.replyId;
+                toggleReplyLike(replyId, this);
+            });
+        });
+
+        // Кнопки ответа
+        document.querySelectorAll('.reply-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.dataset.commentId;
+                toggleReplyForm(commentId);
+            });
+        });
+
+        // Кнопки просмотра ответов
+        document.querySelectorAll('.view-replies-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.dataset.commentId;
+                toggleReplies(commentId, this);
+            });
+        });
+
+        // Отправка ответов
+        document.querySelectorAll('.submit-reply-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.dataset.commentId;
+                submitReply(commentId);
+            });
+        });
+
+        // Отмена ответа
+        document.querySelectorAll('.cancel-reply-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const commentId = this.dataset.commentId;
+                toggleReplyForm(commentId);
+            });
+        });
+    }
+
+    // ============================================
+    // КОММЕНТАРИИ - ФУНКЦИОНАЛ
+    // ============================================
+
+    // Переключение лайка комментария
+    async function toggleCommentLike(commentId, button) {
+        try {
+            const comment = allComments.find(c => c.id == commentId);
+            if (!comment) return;
+
+            // Обновляем локально для мгновенной обратной связи
+            const wasLiked = button.classList.contains('liked');
+            const newLikes = wasLiked ? comment.likes - 1 : comment.likes + 1;
+
+            button.classList.toggle('liked');
+            button.querySelector('.like-count').textContent = newLikes;
+
+            // Обновляем в базе данных
+            const { error } = await window.db
+                .from('comments')
+                .update({ likes: newLikes })
+                .eq('id', commentId);
+
+            if (error) throw error;
+
+            // Обновляем локальные данные
+            comment.likes = newLikes;
+
+        } catch (error) {
+            console.error('Ошибка лайка:', error);
+            // Откатываем визуальное изменение
+            button.classList.toggle('liked');
+        }
+    }
+
+    // Переключение лайка ответа
+    async function toggleReplyLike(replyId, button) {
+        try {
+            // Находим ответ в наших данных
+            let targetReply = null;
+            for (const parentId in commentReplies) {
+                const reply = commentReplies[parentId].find(r => r.id == replyId);
+                if (reply) {
+                    targetReply = reply;
+                    break;
+                }
+            }
+
+            if (!targetReply) return;
+
+            // Обновляем локально
+            const wasLiked = button.classList.contains('liked');
+            const newLikes = wasLiked ? targetReply.likes - 1 : targetReply.likes + 1;
+
+            button.classList.toggle('liked');
+            button.querySelector('.like-count').textContent = newLikes;
+
+            // Обновляем в базе данных
+            const { error } = await window.db
+                .from('comments')
+                .update({ likes: newLikes })
+                .eq('id', replyId);
+
+            if (error) throw error;
+
+            // Обновляем локальные данные
+            targetReply.likes = newLikes;
+
+        } catch (error) {
+            console.error('Ошибка лайка ответа:', error);
+            button.classList.toggle('liked');
+        }
+    }
+
+    // Переключение формы ответа
+    function toggleReplyForm(commentId) {
+        const form = document.getElementById(`replyForm-${commentId}`);
+        if (!form) return;
+
+        form.classList.toggle('active');
+
+        // Фокус на текстовое поле при открытии
+        if (form.classList.contains('active')) {
+            const textarea = form.querySelector('.reply-content');
+            setTimeout(() => textarea.focus(), 100);
+        }
+    }
+
+    // Переключение отображения ответов
+    function toggleReplies(commentId, button) {
+        const repliesDiv = document.getElementById(`replies-${commentId}`);
+        const icon = button.querySelector('.fa-chevron-down');
+
+        if (!repliesDiv) return;
+
+        if (repliesDiv.style.display === 'none' || !repliesDiv.style.display) {
+            repliesDiv.style.display = 'block';
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+            button.querySelector('.reply-count').style.fontWeight = '600';
+        } else {
+            repliesDiv.style.display = 'none';
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+            button.querySelector('.reply-count').style.fontWeight = 'normal';
+        }
+    }
+
+    // Отправка ответа на комментарий
+    async function submitReply(commentId) {
+        const form = document.getElementById(`replyForm-${commentId}`);
+        if (!form) return;
+
+        const textarea = form.querySelector('.reply-content');
+        const content = textarea.value.trim();
+
+        if (!content) {
+            showNotification('Введите текст ответа', 'error');
+            return;
+        }
+
+        // Используем имя из основного комментария или "Аноним"
+        const authorName = document.getElementById('commentAuthor').value.trim() || 'Аноним';
+        const projectId = new URLSearchParams(window.location.search).get('id');
+
+        if (!projectId) return;
+
+        try {
+            // Отправляем ответ в базу данных
+            const { data, error } = await window.db
+                .from('comments')
+                .insert([{
+                    project_id: projectId,
+                    parent_id: commentId,
+                    author_name: authorName,
+                    content: content
+                }])
+                .select();
+
+            if (error) throw error;
+
+            // Очищаем поле ввода
+            textarea.value = '';
+
+            // Скрываем форму
+            form.classList.remove('active');
+
+            // Добавляем ответ локально
+            if (data && data[0]) {
+                if (!commentReplies[commentId]) {
+                    commentReplies[commentId] = [];
+                }
+                commentReplies[commentId].push(data[0]);
+
+                // Обновляем отображение
+                const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                if (commentElement) {
+                    const repliesDiv = commentElement.querySelector('.comment-replies');
+                    const viewRepliesBtn = commentElement.querySelector('.view-replies-btn');
+
+                    if (repliesDiv) {
+                        // Если ответы уже видны, добавляем новый
+                        if (repliesDiv.style.display !== 'none') {
+                            repliesDiv.innerHTML += createReplyHTML(data[0]);
+                        }
+                    }
+
+                    // Обновляем счетчик ответов
+                    if (viewRepliesBtn) {
+                        const countSpan = viewRepliesBtn.querySelector('.reply-count');
+                        const newCount = commentReplies[commentId].length;
+                        countSpan.textContent = newCount;
+                        countSpan.style.fontWeight = '600';
+                    }
+                }
+
+                // Показываем уведомление
+                showNotification('Ответ отправлен!', 'success');
+            }
+
+        } catch (error) {
+            console.error('Ошибка отправки ответа:', error);
+            showNotification('Не удалось отправить ответ', 'error');
+        }
+    }
+
+    // ============================================
+    // КОММЕНТАРИИ - ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // ============================================
+
+    // Форматирование даты комментария
+    function formatCommentDate(dateString) {
+        if (!dateString) return 'Только что';
+
+        try {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+            if (diffMins < 1) return 'Только что';
+            if (diffMins < 60) return `${diffMins} мин назад`;
+            if (diffHours < 24) return `${diffHours} ч назад`;
+            if (diffDays === 1) return 'Вчера';
+            if (diffDays < 7) return `${diffDays} дн назад`;
+
+            return date.toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+        } catch (e) {
+            return 'Недавно';
+        }
+    }
+
+    // Показать ошибку комментария
+    function showCommentError(message) {
+        const errorDiv = document.getElementById('commentError');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            // Автоматически скрыть через 5 секунд
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+
+    // Скрыть ошибку комментария
+    function hideCommentError() {
+        const errorDiv = document.getElementById('commentError');
+        if (errorDiv) {
+            errorDiv.style.display = 'none';
+        }
+    }
+
+    // ============================================
+    // ОБНОВЛЕНИЕ ОСНОВНОЙ ФУНКЦИИ ЗАГРУЗКИ
+    // ============================================
 
     const urlParams = new URLSearchParams(window.location.search);
     const projectId = urlParams.get('id');
@@ -43,6 +663,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // console.log('✅ Проект загружен:', project.title);
             displayProject(project);
             loadSupporters(id);
+            initCommentsSystem(id);
 
         } catch (error) {
             // console.error('Ошибка загрузки проекта:', error);
