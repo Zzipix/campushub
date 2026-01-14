@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ2панель — CampusHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+            .admin-header h1 {
+                color: #4361EE;
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+            }
+
+            .admin-header p {
+                color: #666;
+                font-size: 1.1rem;
+            }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4361EE;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-moderation {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .status-active {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+
+        .projects-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 20px;
+            background: #F8F9FA;
+            border-bottom: 2px solid #E0E0E0;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 20px;
+            border-bottom: 1px solid #EEE;
+            align-items: center;
+        }
+
+            .table-row:hover {
+                background: #F8F9FA;
+            }
+
+        .project-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .project-author {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-approve {
+            background: #D4EDDA;
+            color: #155724;
+            margin-right: 10px;
+        }
+
+            .btn-approve:hover {
+                background: #C3E6CB;
+            }
+
+        .btn-reject {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+
+            .btn-reject:hover {
+                background: #F1B0B7;
+            }
+
+        .btn-view {
+            background: #D1ECF1;
+            color: #0C5460;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .auth-form {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+            .auth-form h2 {
+                color: #4361EE;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: #4361EE;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+            .auth-btn:hover {
+                background: #3A56D4;
+            }
+
+        .no-projects {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #E0E0E0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+            .tab-btn.active {
+                background: #4361EE;
+                color: white;
+            }
+
+        @media (max-width: 768px) {
+            .table-header, .table-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .btn-action {
+                margin-bottom: 5px;
+                width: 100%;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>CampusHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Проекты</a>
+                <a href="admin.html" class="btn-create">Админ-панель</a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="authSection" class="auth-form" style="display: none;">
+        <h2>Вход в админ-панель</h2>
+        <input type="password" id="adminPassword" class="auth-input" placeholder="Введите пароль администратора">
+        <button id="loginBtn" class="auth-btn">Войти</button>
+        <p id="authError" style="color: #F72585; text-align: center; margin-top: 15px; display: none;">Неверный пароль</p>
+    </div>
+
+    <div id="adminPanel" class="admin-container" style="display: none;">
+        <div class="admin-header">
+            <h1>Админ-панель CampusHub</h1>
+            <p>Управление студенческими проектами колледжа</p>
+        </div>
+
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProjects">0</div>
+                <div class="stat-label">Всего проектов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="moderationProjects">0</div>
+                <div class="stat-label">На модерации</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeProjects">0</div>
+                <div class="stat-label">Активных</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAmount">0 ₽</div>
+                <div class="stat-label">Всего собрано</div>
+            </div>
+        </div>
+
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="moderation">На модерации</button>
+            <button class="tab-btn" data-tab="active">Активные</button>
+            <button class="tab-btn" data-tab="rejected">Отклоненные</button>
+            <button class="tab-btn" data-tab="all">Все проекты</button>
+        </div>
+
+        <div id="moderationTab" class="projects-table">
+            <div class="table-header">
+                <div>Проект</div>
+                <div>Автор</div>
+                <div>Факультет</div>
+                <div>Цель сбора</div>
+                <div>Дата создания</div>
+                <div>Действия</div>
+            </div>
+            <div id="moderationProjectsList"></div>
+        </div>
+
+        <div id="activeTab" class="projects-table" style="display: none;">
+            <div class="table-header">
+                <div>Проект</div>
+                <div>Автор</div>
+                <div>Собрано</div>
+                <div>Прогресс</div>
+                <div>Статус</div>
+                <div>Действия</div>
+            </div>
+            <div id="activeProjectsList"></div>
+        </div>
+
+        <div id="rejectedTab" class="projects-table" style="display: none;">
+            <div class="table-header">
+                <div>Проект</div>
+                <div>Автор</div>
+                <div>Причина</div>
+                <div>Дата отклонения</div>
+                <div>Статус</div>
+                <div>Действия</div>
+            </div>
+            <div id="rejectedProjectsList"></div>
+        </div>
+
+        <div id="allTab" class="projects-table" style="display: none;">
+            <div class="table-header">
+                <div>Проект</div>
+                <div>Автор</div>
+                <div>Статус</div>
+                <div>Цель</div>
+                <div>Собрано</div>
+                <div>Дата</div>
+            </div>
+            <div id="allProjectsList"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

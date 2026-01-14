@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusHub — Проекты вашего колледжа</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo" onclick="event.preventDefault(); window.location.href='index.html';">
+                <i class="fas fa-rocket"></i>
+                <span>CampusHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="admin.html" style="color: #888; font-size: 0.9rem;">Админ</a>
+                <a href="#" onclick="event.preventDefault(); window.location.href='index.html';">Проекты</a>
+                <a href="create.html" class="btn-create">Создать проект</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>Какие проекты запускают в <span class="highlight">твоём колледже</span>?</h1>
+            <p>Покажи свою идею. Поддержи других. Создавай реальное.</p>
+            <a href="create.html" class="btn-hero">
+                Рассказать о своём проекте <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </header>
+
+    <section class="filters">
+        <div class="container">
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">Все</button>
+                <button class="filter-btn" data-filter="team">Ищут команду</button>
+                <button class="filter-btn" data-filter="ending">Заканчиваются</button>
+                <button class="filter-btn" data-filter="favorites" id="favoritesBtn">
+                    <i class="fas fa-star"></i> Избранное
+                </button>
+                <select class="faculty-select">
+                    <option value="">Все факультеты</option>
+                    <option value="informatics">Информатика</option>
+                    <option value="design">Дизайн</option>
+                    <option value="economics">Экономика</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <div id="projects-grid" class="projects-grid">
+            <div class="project-card skeleton">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text short"></div>
+            </div>
+        </div>
+        <div id="no-projects" class="no-projects" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <h3>Пока нет активных проектов</h3>
+            <p>Будь первым — создай свой проект!</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>CampusHub — внутренняя платформа для студенческих проектов. Без регистрации, без комиссии.</p>
+            <p class="small">Для студентов колледжа информационных технологий и дизайна</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,685 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проект — CampusHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .project-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .project-header {
+            margin-bottom: 40px;
+        }
+
+        .project-image {
+            height: 400px;
+            background: linear-gradient(45deg, #4361EE, #4CC9F0);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .project-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .project-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .project-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .project-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .project-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .project-description {
+            line-height: 1.8;
+            color: #444;
+            font-size: 1.1rem;
+        }
+
+            .project-description h3 {
+                color: #4361EE;
+                margin: 30px 0 15px;
+            }
+
+        .support-sidebar {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 100px;
+            /* Убрали ограничение высоты */
+        }
+
+        .progress-section {
+            margin-bottom: 30px;
+        }
+
+        .progress-numbers {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .progress-bar-large {
+            height: 12px;
+            background: #E8E8E8;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .progress-fill-large {
+            height: 100%;
+            background: #F72585;
+            border-radius: 6px;
+            width: 0%;
+            transition: width 1s ease-out;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .support-form {
+            margin: 30px 0;
+        }
+
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .amount-btn {
+            padding: 15px;
+            background: #F8F9FA;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+            .amount-btn:hover {
+                border-color: #4361EE;
+                color: #4361EE;
+            }
+
+            .amount-btn.active {
+                background: #4361EE;
+                color: white;
+                border-color: #4361EE;
+            }
+
+        .custom-amount {
+            position: relative;
+            margin: 20px 0;
+        }
+
+            .custom-amount input {
+                width: 100%;
+                padding: 15px 15px 15px 45px;
+                border: 2px solid #E0E0E0;
+                border-radius: 10px;
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+            .custom-amount .currency {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: 600;
+                color: #666;
+            }
+
+        .btn-support-large {
+            width: 100%;
+            padding: 18px;
+            background: #F72585;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 20px;
+        }
+
+            .btn-support-large:hover {
+                background: #E01A73;
+            }
+
+        /* Обновленные стили для списка сторонников - все 3 сразу */
+        .supporters-list {
+            margin-top: 40px;
+            /* Убрали ограничение высоты */
+        }
+
+        .supporters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .recent-supporters {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .supporter-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+
+            .supporter-card:hover {
+                transform: translateY(-2px);
+                background: #F0F4FF;
+            }
+
+        .supporter-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4361EE, #4CC9F0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .supporter-info {
+            flex: 1;
+            min-width: 0; /* Для корректного обрезания текста */
+        }
+
+            .supporter-info h4 {
+                margin: 0 0 5px;
+                color: #333;
+                font-size: 1rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .supporter-info p {
+                margin: 0;
+                color: #666;
+                font-size: 0.9rem;
+            }
+
+        .supporter-amount {
+            color: #F72585;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-left: 10px;
+        }
+
+        .view-all-supporters {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #EEE;
+        }
+
+        .show-all-btn {
+            background: #4361EE;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .show-all-btn:hover {
+                background: #3A56D4;
+                transform: translateY(-2px);
+            }
+
+        /* Модальное окно всех сторонников */
+        .all-supporters-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .all-supporters-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .all-supporters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #EEE;
+        }
+
+            .all-supporters-header h3 {
+                color: #4361EE;
+                margin: 0;
+            }
+
+        .close-modal-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+            .close-modal-btn:hover {
+                color: #F72585;
+            }
+
+        .all-supporters-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .all-supporter-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #F8F9FA;
+            border-radius: 12px;
+        }
+
+        .all-supporter-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4361EE, #4CC9F0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .all-supporter-info {
+            flex: 1;
+        }
+
+            .all-supporter-info h4 {
+                margin: 0 0 5px;
+                color: #333;
+            }
+
+            .all-supporter-info p {
+                margin: 0;
+                color: #666;
+                font-size: 0.9rem;
+            }
+
+        .all-supporter-amount {
+            color: #F72585;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .no-supporters-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+            .no-supporters-message i {
+                font-size: 3rem;
+                margin-bottom: 15px;
+                opacity: 0.5;
+            }
+
+        .team-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #EEE;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 15px;
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4361EE, #4CC9F0);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .success-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #4CC9F0;
+            margin-bottom: 20px;
+        }
+
+        /* Анимации */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CC9F0;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .notification.error {
+                background: #F72585;
+            }
+
+            .notification.success {
+                background: #4CC9F0;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>CampusHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Проекты</a>
+                <a href="create.html" class="btn-create">Создать проект</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="project-container">
+        <div class="project-header">
+            <div class="project-image" id="projectImage">
+                <div class="project-status">
+                    <span id="projectStatus"></span>
+                </div>
+            </div>
+            <h1 class="project-title" id="projectTitle">Загрузка...</h1>
+            <div class="project-meta">
+                <div class="project-meta-item">
+                    <i class="fas fa-user"></i>
+                    <span id="projectAuthor">Автор</span>
+                </div>
+                <div class="project-meta-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span id="projectFaculty">Факультет</span>
+                </div>
+                <div class="project-meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span id="projectDate">Дата</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-content">
+            <div class="project-description" id="projectDescription">
+                <p>Загрузка описания проекта...</p>
+            </div>
+
+            <div class="support-sidebar">
+                <div class="progress-section">
+                    <div class="progress-numbers">
+                        <span id="collectedAmount">0 ₽</span>
+                        <span id="targetAmount">0 ₽</span>
+                    </div>
+                    <div class="progress-bar-large">
+                        <div class="progress-fill-large" id="progressFill"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span><i class="fas fa-users"></i> <span id="supportersCount">0</span> поддержали</span>
+                        <span><i class="fas fa-clock"></i> <span id="daysLeft">0</span> дней осталось</span>
+                    </div>
+                </div>
+
+                <div class="support-form">
+                    <h3 style="color: #4361EE; margin-bottom: 20px;">Поддержать проект</h3>
+
+                    <div class="amount-options" id="amountOptions">
+                        <button class="amount-btn" data-amount="100">100 ₽</button>
+                        <button class="amount-btn" data-amount="500">500 ₽</button>
+                        <button class="amount-btn" data-amount="1000">1 000 ₽</button>
+                        <button class="amount-btn" data-amount="2000">2 000 ₽</button>
+                        <button class="amount-btn" data-amount="5000">5 000 ₽</button>
+                        <button class="amount-btn" data-amount="custom">Другая</button>
+                    </div>
+
+
+                    <div class="custom-amount" id="customAmountSection" style="display: none;">
+                        <div class="currency">₽</div>
+                        <input type="number" id="customAmount" placeholder="Введите сумму" min="10" max="1000000">
+                    </div>
+
+
+                    <div style="margin: 20px 0; padding: 15px; background: #E8F4FF; border-radius: 10px;">
+                        <p style="margin: 0; color: #4361EE; font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i> Это демо-режим. В реальной версии здесь будет переход к оплате.
+                        </p>
+                    </div>
+
+                    <button class="btn-support-large" id="supportBtn">
+                        <i class="fas fa-heart"></i> Поддержать проект
+                    </button>
+                </div>
+
+                <div class="supporters-list" id="supportersList">
+                    <div class="supporters-header">
+                        <h4 style="color: #333; margin: 0;">Недавно поддержали</h4>
+                        <span class="supporters-counter" id="supportersCounter">
+                            <span id="supportersCountDisplay">0</span> человек
+                        </span>
+                    </div>
+
+                    <div class="recent-supporters" id="recentSupporters">
+                    </div>
+
+                    <div class="view-all-supporters" id="viewAllSupporters" style="display: none;">
+                        <button class="show-all-btn" id="showAllSupportersBtn">
+                            <i class="fas fa-list"></i> Показать всех
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section" id="teamSection" style="display: none;">
+            <h2 style="color: #4361EE; margin-bottom: 10px;">Команда проекта</h2>
+            <p style="color: #666; margin-bottom: 20px;">Над проектом работают:</p>
+            <div class="team-grid" id="teamGrid">
+            </div>
+        </div>
+
+        <div class="team-section" id="budgetSection">
+            <h2 style="color: #4361EE; margin-bottom: 10px;">На что пойдут средства?</h2>
+            <div id="budgetItems">
+            </div>
+        </div>
+    </main>
+
+    <div class="all-supporters-modal" id="allSupportersModal">
+        <div class="all-supporters-content">
+            <div class="all-supporters-header">
+                <h3>Все сторонники проекта</h3>
+                <button class="close-modal-btn" id="closeAllSupportersBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="all-supporters-list" id="allSupportersList">
+            </div>
+        </div>
+    </div>
+
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 style="color: #4361EE; margin-bottom: 15px;">Спасибо за поддержку!</h2>
+            <p id="successMessage">Вы успешно поддержали проект на <strong>0 ₽</strong>.</p>
+            <p style="color: #666; margin: 20px 0;">В реальной версии здесь был бы переход к оплате.</p>
+            <button class="btn-support-large" id="closeModalBtn" style="background: #4361XX; margin-top: 20px;">
+                Продолжить
+            </button>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/project.js"></script>
+</body>
+</html>

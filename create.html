@@ -1,0 +1,588 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать проект — CampusHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        .create-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .create-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+            .create-header h1 {
+                color: #4361EE;
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+            }
+
+            .create-header p {
+                color: #666;
+                font-size: 1.1rem;
+            }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+            .form-step.active {
+                display: block;
+            }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+            .form-label .required {
+                color: #F72585;
+            }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+            .form-input:focus, .form-textarea:focus, .form-select:focus {
+                outline: none;
+                border-color: #4361EE;
+            }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-hint {
+            display: block;
+            margin-top: 6px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+            .form-checkbox input {
+                width: 18px;
+                height: 18px;
+            }
+
+            .form-checkbox label {
+                cursor: pointer;
+            }
+
+        .team-member-item, .budget-item {
+            background: #F8F9FA;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .budget-row, .team-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .team-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .add-budget, .add-team {
+            background: #E8F4FF;
+            color: #4361EE;
+            border: 2px dashed #4361EE;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+            .add-budget:hover, .add-team:hover {
+                background: #D8EBFF;
+            }
+
+        .remove-member, .remove-budget {
+            background: #FFE8E8;
+            color: #F72585;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .remove-member:hover, .remove-budget:hover {
+                background: #FFD6D6;
+            }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #EEE;
+        }
+
+        .btn-prev, .btn-next, .btn-submit {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-prev {
+            background: #F8F9FA;
+            color: #666;
+            border: 2px solid #E0E0E0;
+        }
+
+            .btn-prev:hover {
+                background: #EEE;
+            }
+
+        .btn-next {
+            background: #4361EE;
+            color: white;
+        }
+
+            .btn-next:hover {
+                background: #3A56D4;
+            }
+
+        .btn-submit {
+            background: #F72585;
+            color: white;
+        }
+
+            .btn-submit:hover {
+                background: #E01A73;
+            }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            color: #777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .step.active .step-number {
+            background: #4361EE;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #4CC9F0;
+            color: white;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .step.active .step-title {
+            color: #4361EE;
+            font-weight: 600;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #4CC9F0;
+            margin-bottom: 20px;
+        }
+
+        .success-message h2 {
+            color: #4361EE;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            color: #666;
+            margin-bottom: 25px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .summary-item {
+            background: #F8F9FA;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+            .summary-item h4 {
+                color: #4361EE;
+                margin-bottom: 15px;
+                font-size: 1.1rem;
+                border-bottom: 2px solid #E0E0E0;
+                padding-bottom: 8px;
+            }
+
+            .summary-item ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .summary-item li {
+                padding: 10px 0;
+                border-bottom: 1px solid #E8E8E8;
+                display: flex;
+                justify-content: space-between;
+            }
+
+                .summary-item li:last-child {
+                    border-bottom: none;
+                }
+
+        .summary-amount {
+            color: #4361EE;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .budget-row, .team-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn-prev, .btn-next, .btn-submit {
+                width: 100%;
+            }
+
+            .step-indicator {
+                gap: 15px;
+            }
+
+            .step-title {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>CampusHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Проекты</a>
+                <a href="create.html" class="btn-create">Создать проект</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="create-container">
+        <div class="create-header">
+            <h1>Создать проект</h1>
+            <p>Заполни форму ниже, чтобы представить свою идею сообществу колледжа</p>
+        </div>
+
+        <div class="step-indicator">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Основное</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">Команда & Бюджет</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Дополнительно</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-title">Готово</div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="form-step active" id="step1">
+                <div class="form-group">
+                    <label class="form-label">Название проекта <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="projectTitle" placeholder="Например: StudySwap — обмен учебниками" required>
+                    <span class="form-hint">Краткое и понятное название, которое привлечет внимание</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Описание проекта <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="projectDescription" placeholder="Опишите свою идею: какую проблему она решает, как будет работать, чем полезна для студентов колледжа..." required></textarea>
+                    <span class="form-hint">Расскажите о вашем проекте подробно. Минимум 100 символов.</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Ваше имя <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="authorName" placeholder="Иван Иванов" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Факультет <span class="required">*</span></label>
+                        <select class="form-select" id="authorFaculty" required>
+                            <option value="">Выберите факультет</option>
+                            <option value="Информатика">Информатика</option>
+                            <option value="Дизайн">Дизайн</option>
+                            <option value="Экономика">Экономика</option>
+                            <option value="Биология">Биология</option>
+                            <option value="Лингвистика">Лингвистика</option>
+                            <option value="Другой">Другой</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Учебная почта <span class="required">*</span></label>
+                    <input type="email" class="form-input" id="authorEmail" placeholder="ivan@college.edu" required>
+                    <span class="form-hint">Мы отправим ссылку для управления проектом на эту почту</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Изображение проекта</label>
+                    <input type="url" class="form-input" id="projectImage" placeholder="https://example.com/image.jpg">
+                    <span class="form-hint">Ссылка на обложку проекта (можно добавить позже)</span>
+                </div>
+            </div>
+
+            <div class="form-step" id="step2">
+                <div class="form-group">
+                    <label class="form-label">Команда проекта</label>
+                    <div id="teamMembers">
+                        <div class="team-member-item">
+                            <div class="team-row">
+                                <input type="text" class="form-input team-name" placeholder="Имя и фамилия" value="">
+                                <input type="text" class="form-input team-role" placeholder="Роль в проекте" value="">
+                            </div>
+                            <div class="team-row">
+                                <input type="text" class="form-input team-faculty" placeholder="Факультет" value="">
+                                <input type="text" class="form-input team-contacts" placeholder="Контакты (email/телеграм)" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="add-team" id="addTeamMember">
+                        <i class="fas fa-plus"></i> Добавить члена команды
+                    </button>
+                    <span class="form-hint">Укажите кто работает над проектом (необязательно)</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">На что пойдут средства?</label>
+                    <div id="budgetItems">
+                        <div class="budget-item">
+                            <div class="budget-row">
+                                <input type="text" class="form-input budget-description" placeholder="Например: Покупка оборудования" value="">
+                                <input type="number" class="form-input budget-amount" placeholder="10000" min="0" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="add-budget" id="addBudgetItem">
+                        <i class="fas fa-plus"></i> Добавить статью расходов
+                    </button>
+                    <span class="form-hint">Распишите бюджет по статьям расходов (необязательно)</span>
+                </div>
+            </div>
+
+            <div class="form-step" id="step3">
+                <div class="form-group">
+                    <label class="form-label">Общая цель сбора <span class="required">*</span></label>
+                    <input type="number" class="form-input" id="targetAmount" placeholder="25000" min="1000" max="1000000" required>
+                    <span class="form-hint">Сумма в рублях, которая нужна для реализации проекта</span>
+                </div>
+
+                <div class="form-checkbox">
+                    <input type="checkbox" id="needsTeam">
+                    <label for="needsTeam">Ищу команду для реализации проекта</label>
+                </div>
+
+                <div class="form-checkbox">
+                    <input type="checkbox" id="hasDeadline">
+                    <label for="hasDeadline">Установить срок сбора средств</label>
+                </div>
+
+                <div class="form-group" id="deadlineField" style="display: none;">
+                    <label class="form-label">Срок сбора</label>
+                    <select class="form-select" id="projectDeadline">
+                        <option value="30">30 дней</option>
+                        <option value="45" selected>45 дней</option>
+                        <option value="60">60 дней</option>
+                        <option value="90">90 дней</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Реквизиты для получения средств</label>
+                    <input type="text" class="form-input" id="paymentDetails" placeholder="Номер карты или телефон для СБП">
+                    <span class="form-hint">Эти данные будут видны только тем, кто решит поддержать проект</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Дополнительная информация</label>
+                    <textarea class="form-textarea" id="additionalInfo" placeholder="Есть ли у вас уже наработки? Нужны ли консультации преподавателей? Какая помощь нужна от колледжа?"></textarea>
+                </div>
+            </div>
+
+            <div class="form-step" id="step4">
+                <div class="success-message" style="display: none;" id="successMessage">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Проект успешно создан!</h2>
+                    <p>Ваш проект отправлен на модерацию. Обычно это занимает до 24 часов. После одобрения он появится на главной странице.</p>
+                    <p>Ссылка для управления проектом будет отправлена на указанную почту.</p>
+                    <div style="margin-top: 30px;">
+                        <a href="index.html" class="btn-submit">Вернуться к проектам</a>
+                    </div>
+                </div>
+
+                <div id="summarySection">
+                    <h3 style="color: #4361EE; margin-bottom: 20px;">Проверьте информацию о проекте</h3>
+
+                    <div class="summary-item">
+                        <h4>Основная информация</h4>
+                        <ul>
+                            <li><strong>Название:</strong> <span id="summaryTitle"></span></li>
+                            <li><strong>Автор:</strong> <span id="summaryAuthor"></span></li>
+                            <li><strong>Факультет:</strong> <span id="summaryFaculty"></span></li>
+                            <li><strong>Ищет команду:</strong> <span id="summaryTeam"></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="summary-item">
+                        <h4>Цель сбора</h4>
+                        <ul>
+                            <li><strong>Общая сумма:</strong> <span id="summaryAmount"></span> ₽</li>
+                            <li><strong>Срок сбора:</strong> <span id="summaryDeadline"></span></li>
+                        </ul>
+                    </div>
+
+                    <div class="summary-item">
+                        <h4>Команда проекта</h4>
+                        <ul id="summaryTeamList">
+                        </ul>
+                    </div>
+
+                    <div class="summary-item">
+                        <h4>Распределение бюджета</h4>
+                        <ul id="summaryBudgetList">
+                        </ul>
+                    </div>
+
+                    <div class="form-checkbox" style="margin: 25px 0;">
+                        <input type="checkbox" id="confirmRules" required>
+                        <label for="confirmRules">Я подтверждаю, что вся информация верна, и согласен с правилами платформы</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-prev" id="prevBtn" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+                <button class="btn-next" id="nextBtn">
+                    Далее <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="btn-submit" id="submitBtn" style="display: none;">
+                    <i class="fas fa-paper-plane"></i> Отправить проект
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/create.js"></script>
+</body>
+</html>
