@@ -1354,4 +1354,20 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #4361EE;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.profile-link:hover {
+    background: #3A56D4;
+    transform: translateY(-2px);
+}
 }

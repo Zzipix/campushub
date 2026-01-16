@@ -1,4 +1,4 @@
-﻿// create.js - логика создания проекта (без лишних логов)
+﻿// create.js - УПРОЩЕННАЯ ВЕРСИЯ
 document.addEventListener('DOMContentLoaded', function () {
     const steps = document.querySelectorAll('.form-step');
     const stepIndicators = document.querySelectorAll('.step');
@@ -35,7 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('addTeamMember').addEventListener('click', addTeamMember);
         document.getElementById('addBudgetItem').addEventListener('click', addBudgetItem);
-        addTeamMember();
+
+        // Автозаполнение из сохраненного профиля
+        autofillFromProfile();
     }
 
     function goToPrevStep() {
@@ -308,22 +310,110 @@ document.addEventListener('DOMContentLoaded', function () {
                 throw error;
             }
 
+            // ✅ ПРОСТАЯ РЕГИСТРАЦИЯ - просто сохраняем в localStorage
+            registerUser(projectData.author_email, projectData.author_name, projectData.author_faculty);
+
             successMessage.style.display = 'block';
             summarySection.style.display = 'none';
             submitBtn.style.display = 'none';
             prevBtn.style.display = 'none';
 
-            sendConfirmationEmail(projectData.author_email, projectData.title);
+            // Сохраняем профиль для автозаполнения
+            saveProfileForAutofill(projectData.author_name, projectData.author_email, projectData.author_faculty);
 
         } catch (error) {
+            console.error('Ошибка при создании проекта:', error);
             alert('Ошибка при создании проекта. Пожалуйста, попробуйте позже.');
             submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить проект';
             submitBtn.disabled = false;
         }
     }
 
-    function sendConfirmationEmail(email, projectTitle) {
-        // "Отправка" письма
+    // ============================================
+    // ПРОСТАЯ СИСТЕМА АККАУНТОВ (БЕЗ EMAIL)
+    // ============================================
+
+    function registerUser(email, name, faculty) {
+        const user = {
+            email: email,
+            name: name,
+            faculty: faculty || '',
+            registeredAt: new Date().toISOString(),
+            isActive: true
+        };
+
+        localStorage.setItem('campusHub_user', JSON.stringify(user));
+        console.log('Пользователь зарегистрирован:', user);
+
+        return user;
+    }
+
+    function autofillFromProfile() {
+        const savedProfile = localStorage.getItem('campusHub_user');
+        if (savedProfile) {
+            try {
+                const profile = JSON.parse(savedProfile);
+                document.getElementById('authorName').value = profile.name || '';
+                document.getElementById('authorEmail').value = profile.email || '';
+
+                if (profile.faculty) {
+                    document.getElementById('authorFaculty').value = profile.faculty;
+                }
+
+                showProfileNotification(profile.name);
+
+            } catch (e) {
+                console.warn('Не удалось загрузить профиль:', e);
+            }
+        }
+    }
+
+    function showProfileNotification(userName) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            background: #D4EDDA;
+            color: #155724;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #C3E6CB;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease;
+        `;
+
+        notification.innerHTML = `
+            <i class="fas fa-check-circle" style="color: #28a745;"></i>
+            <span>Вы вошли как <strong>${escapeHtml(userName)}</strong>. Данные заполнены автоматически.</span>
+        `;
+
+        const formCard = document.querySelector('.form-card');
+        if (formCard) {
+            formCard.insertBefore(notification, formCard.firstChild);
+
+            // Убираем через 10 секунд
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 10000);
+        }
+    }
+
+    function saveProfileForAutofill(name, email, faculty) {
+        const profile = {
+            name: name,
+            email: email,
+            faculty: faculty || '',
+            lastUpdated: new Date().toISOString()
+        };
+
+        localStorage.setItem('campusHub_profile', JSON.stringify(profile));
     }
 
     function escapeHtml(text) {
@@ -332,4 +422,74 @@ document.addEventListener('DOMContentLoaded', function () {
         div.textContent = text;
         return div.innerHTML;
     }
+
+    // Автосохранение черновика
+    window.addEventListener('beforeunload', function() {
+        if (currentStep > 1) {
+            const draft = {
+                step: currentStep,
+                projectData: projectData,
+                formValues: getFormValues()
+            };
+            localStorage.setItem('campusHub_draft', JSON.stringify(draft));
+        }
+    });
+
+    // Восстановление черновика
+    function restoreDraft() {
+        try {
+            const draft = localStorage.getItem('campusHub_draft');
+            if (draft) {
+                const data = JSON.parse(draft);
+                if (confirm('У вас есть сохраненный черновик проекта. Хотите продолжить?')) {
+                    setFormValues(data.formValues);
+                    Object.assign(projectData, data.projectData);
+                    currentStep = data.step;
+                    updateStep();
+                } else {
+                    localStorage.removeItem('campusHub_draft');
+                }
+            }
+        } catch (e) {
+            console.warn('Не удалось восстановить черновик:', e);
+            localStorage.removeItem('campusHub_draft');
+        }
+    }
+
+    function getFormValues() {
+        return {
+            title: document.getElementById('projectTitle').value,
+            description: document.getElementById('projectDescription').value,
+            authorName: document.getElementById('authorName').value,
+            authorFaculty: document.getElementById('authorFaculty').value,
+            authorEmail: document.getElementById('authorEmail').value,
+            projectImage: document.getElementById('projectImage').value,
+            targetAmount: document.getElementById('targetAmount').value,
+            paymentDetails: document.getElementById('paymentDetails').value,
+            needsTeam: document.getElementById('needsTeam').checked,
+            hasDeadline: document.getElementById('hasDeadline').checked,
+            projectDeadline: document.getElementById('projectDeadline').value
+        };
+    }
+
+    function setFormValues(values) {
+        document.getElementById('projectTitle').value = values.title || '';
+        document.getElementById('projectDescription').value = values.description || '';
+        document.getElementById('authorName').value = values.authorName || '';
+        document.getElementById('authorFaculty').value = values.authorFaculty || '';
+        document.getElementById('authorEmail').value = values.authorEmail || '';
+        document.getElementById('projectImage').value = values.projectImage || '';
+        document.getElementById('targetAmount').value = values.targetAmount || '';
+        document.getElementById('paymentDetails').value = values.paymentDetails || '';
+        document.getElementById('needsTeam').checked = values.needsTeam || false;
+        document.getElementById('hasDeadline').checked = values.hasDeadline || false;
+        document.getElementById('projectDeadline').value = values.projectDeadline || '45';
+
+        if (values.hasDeadline) {
+            document.getElementById('deadlineField').style.display = 'block';
+        }
+    }
+
+    // Запускаем восстановление черновика
+    setTimeout(restoreDraft, 100);
 });
