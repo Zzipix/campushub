@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         .project-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
         }
@@ -26,6 +26,18 @@
             background-size: cover;
             background-position: center;
             position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
+            border-radius: 20px;
         }
 
         .project-status {
@@ -37,13 +49,15 @@
             border-radius: 20px;
             font-weight: 600;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 2;
         }
 
         .project-title {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: #333;
             margin-bottom: 15px;
             font-weight: 700;
+            line-height: 1.2;
         }
 
         .project-meta {
@@ -51,12 +65,20 @@
             gap: 30px;
             margin-bottom: 30px;
             color: #666;
+            flex-wrap: wrap;
         }
 
         .project-meta-item {
             display: flex;
             align-items: center;
             gap: 8px;
+            background: #F8F9FA;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .project-meta-item i {
+            color: #4361EE;
         }
 
         .project-content {
@@ -65,9 +87,36 @@
             gap: 40px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .project-content {
                 grid-template-columns: 1fr;
+            }
+
+            .project-title {
+                font-size: 2.2rem;
+            }
+
+            .project-image {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 1.8rem;
+            }
+
+            .project-image {
+                height: 250px;
+            }
+
+            .project-meta {
+                gap: 15px;
+            }
+
+            .project-meta-item {
+                padding: 8px 12px;
+                font-size: 0.9rem;
             }
         }
 
@@ -77,10 +126,11 @@
             font-size: 1.1rem;
         }
 
-            .project-description h3 {
-                color: #4361EE;
-                margin: 30px 0 15px;
-            }
+        .project-description h3 {
+            color: #4361EE;
+            margin: 30px 0 15px;
+            font-size: 1.5rem;
+        }
 
         .support-sidebar {
             background: white;
@@ -89,7 +139,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             position: sticky;
             top: 100px;
-            /* Убрали ограничение высоты */
+            height: fit-content;
         }
 
         .progress-section {
@@ -101,20 +151,21 @@
             justify-content: space-between;
             margin-bottom: 10px;
             font-weight: 600;
+            font-size: 1.2rem;
         }
 
         .progress-bar-large {
-            height: 12px;
+            height: 14px;
             background: #E8E8E8;
-            border-radius: 6px;
+            border-radius: 7px;
             overflow: hidden;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .progress-fill-large {
             height: 100%;
-            background: #F72585;
-            border-radius: 6px;
+            background: linear-gradient(90deg, #F72585, #FF6B95);
+            border-radius: 7px;
             width: 0%;
             transition: width 1s ease-out;
         }
@@ -124,10 +175,21 @@
             justify-content: space-between;
             color: #666;
             font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .progress-stats i {
+            margin-right: 5px;
         }
 
         .support-form {
             margin: 30px 0;
+        }
+
+        .support-form h3 {
+            color: #4361EE;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
         }
 
         .amount-options {
@@ -135,6 +197,12 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .amount-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .amount-btn {
@@ -146,64 +214,81 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            font-size: 1rem;
         }
 
-            .amount-btn:hover {
-                border-color: #4361EE;
-                color: #4361EE;
-            }
+        .amount-btn:hover {
+            border-color: #4361EE;
+            color: #4361EE;
+            transform: translateY(-2px);
+        }
 
-            .amount-btn.active {
-                background: #4361EE;
-                color: white;
-                border-color: #4361EE;
-            }
+        .amount-btn.active {
+            background: #4361EE;
+            color: white;
+            border-color: #4361EE;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
 
         .custom-amount {
             position: relative;
             margin: 20px 0;
         }
 
-            .custom-amount input {
-                width: 100%;
-                padding: 15px 15px 15px 45px;
-                border: 2px solid #E0E0E0;
-                border-radius: 10px;
-                font-size: 1.1rem;
-                font-weight: 600;
-            }
+        .custom-amount input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: border-color 0.2s;
+        }
 
-            .custom-amount .currency {
-                position: absolute;
-                left: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                font-weight: 600;
-                color: #666;
-            }
+        .custom-amount input:focus {
+            outline: none;
+            border-color: #4361EE;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .custom-amount .currency {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 600;
+            color: #666;
+            font-size: 1.2rem;
+        }
 
         .btn-support-large {
             width: 100%;
             padding: 18px;
-            background: #F72585;
+            background: linear-gradient(135deg, #F72585, #FF6B95);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s;
             margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(247, 37, 133, 0.3);
         }
 
-            .btn-support-large:hover {
-                background: #E01A73;
-            }
+        .btn-support-large:hover {
+            background: linear-gradient(135deg, #E01A73, #FF5585);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(247, 37, 133, 0.4);
+        }
 
-        /* Обновленные стили для списка сторонников - все 3 сразу */
+        /* Стили для списка сторонников */
         .supporters-list {
             margin-top: 40px;
-            /* Убрали ограничение высоты */
         }
 
         .supporters-header {
@@ -213,11 +298,25 @@
             margin-bottom: 20px;
         }
 
+        .supporters-header h4 {
+            color: #333;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .supporters-counter {
+            color: #4361EE;
+            font-weight: 600;
+            background: #F0F4FF;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
         .recent-supporters {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 12px;
         }
 
         .supporter-card {
@@ -227,60 +326,64 @@
             padding: 15px;
             background: #F8F9FA;
             border-radius: 12px;
-            transition: transform 0.2s;
+            transition: all 0.2s;
+            border: 1px solid transparent;
         }
 
-            .supporter-card:hover {
-                transform: translateY(-2px);
-                background: #F0F4FF;
-            }
+        .supporter-card:hover {
+            background: white;
+            border-color: #E0E0E0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
 
         .supporter-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #4361EE, #4CC9F0);
+            background: linear-gradient(135deg, #4361EE, #4CC9F0);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.2rem;
             flex-shrink: 0;
         }
 
         .supporter-info {
             flex: 1;
-            min-width: 0; /* Для корректного обрезания текста */
+            min-width: 0;
         }
 
-            .supporter-info h4 {
-                margin: 0 0 5px;
-                color: #333;
-                font-size: 1rem;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
+        .supporter-info h4 {
+            margin: 0 0 5px;
+            color: #333;
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-            .supporter-info p {
-                margin: 0;
-                color: #666;
-                font-size: 0.9rem;
-            }
+        .supporter-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
 
         .supporter-amount {
             color: #F72585;
             font-weight: 700;
             font-size: 1.1rem;
             flex-shrink: 0;
-            margin-left: 10px;
+            min-width: 80px;
+            text-align: right;
         }
 
         .view-all-supporters {
             text-align: center;
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
             border-top: 1px solid #EEE;
         }
 
@@ -296,12 +399,14 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-weight: 600;
         }
 
-            .show-all-btn:hover {
-                background: #3A56D4;
-                transform: translateY(-2px);
-            }
+        .show-all-btn:hover {
+            background: #3A56D4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
 
         /* Модальное окно всех сторонников */
         .all-supporters-modal {
@@ -315,6 +420,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(4px);
         }
 
         .all-supporters-content {
@@ -325,6 +431,7 @@
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .all-supporters-header {
@@ -336,10 +443,11 @@
             border-bottom: 2px solid #EEE;
         }
 
-            .all-supporters-header h3 {
-                color: #4361EE;
-                margin: 0;
-            }
+        .all-supporters-header h3 {
+            color: #4361EE;
+            margin: 0;
+            font-size: 1.3rem;
+        }
 
         .close-modal-btn {
             background: none;
@@ -350,11 +458,18 @@
             padding: 5px;
             line-height: 1;
             transition: color 0.2s;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-            .close-modal-btn:hover {
-                color: #F72585;
-            }
+        .close-modal-btn:hover {
+            background: #F8F9FA;
+            color: #F72585;
+        }
 
         .all-supporters-list {
             display: flex;
@@ -369,40 +484,49 @@
             padding: 15px;
             background: #F8F9FA;
             border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .all-supporter-item:hover {
+            background: #F0F4FF;
         }
 
         .all-supporter-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #4361EE, #4CC9F0);
+            background: linear-gradient(135deg, #4361EE, #4CC9F0);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
             font-size: 1rem;
+            flex-shrink: 0;
         }
 
         .all-supporter-info {
             flex: 1;
         }
 
-            .all-supporter-info h4 {
-                margin: 0 0 5px;
-                color: #333;
-            }
+        .all-supporter-info h4 {
+            margin: 0 0 5px;
+            color: #333;
+            font-size: 1rem;
+        }
 
-            .all-supporter-info p {
-                margin: 0;
-                color: #666;
-                font-size: 0.9rem;
-            }
+        .all-supporter-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
 
         .all-supporter-amount {
             color: #F72585;
             font-weight: 700;
             font-size: 1.1rem;
+            min-width: 100px;
+            text-align: right;
         }
 
         .no-supporters-message {
@@ -411,46 +535,707 @@
             color: #888;
         }
 
-            .no-supporters-message i {
-                font-size: 3rem;
-                margin-bottom: 15px;
-                opacity: 0.5;
-            }
+        .no-supporters-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
 
+        /* Секции проекта */
         .team-section {
             margin-top: 50px;
             padding-top: 30px;
             border-top: 2px solid #EEE;
         }
 
+        .team-section h2 {
+            color: #4361EE;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .team-section p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
             margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
         }
 
         .team-member {
             text-align: center;
-            padding: 20px;
-            background: #F8F9FA;
-            border-radius: 15px;
+            padding: 25px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #F0F4FF;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.1);
+            border-color: #4361EE;
         }
 
         .team-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(45deg, #4361EE, #4CC9F0);
+            background: linear-gradient(135deg, #4361EE, #4CC9F0);
             margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .team-member h4 {
+            margin: 0 0 8px;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .team-member p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .team-member .role {
+            color: #4361EE;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .team-member .faculty {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .team-member .contacts {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        .team-member .contacts i {
+            margin-right: 5px;
+        }
+
+        /* Секция бюджета */
+        .budget-item-detailed {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid #4CC9F0;
+            transition: all 0.3s;
+        }
+
+        .budget-item-detailed:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .budget-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .budget-item-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .budget-item-amount {
+            color: #4361EE;
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+
+        .budget-progress-bar {
+            background: #E8E8E8;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .budget-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CC9F0, #7209B7);
+            width: 100%;
+        }
+
+        /* Секция комментариев */
+        .comments-container {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #EEE;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .comments-header h2 {
+            color: #4361EE;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .comments-count {
+            color: #4361EE;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: #F0F4FF;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        /* Карточка добавления комментария */
+        .add-comment-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            border: 2px solid #F0F4FF;
+            transition: all 0.3s;
+        }
+
+        .add-comment-card:hover {
+            border-color: #4361EE;
+            box-shadow: 0 12px 40px rgba(67, 97, 238, 0.1);
+        }
+
+        .add-comment-header {
+            margin-bottom: 25px;
+        }
+
+        .add-comment-header h3 {
+            color: #4361EE;
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .add-comment-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .add-comment-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-input-group label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-input-group input,
+        .form-input-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-input-group input:focus,
+        .form-input-group textarea:focus {
+            outline: none;
+            border-color: #4361EE;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .comment-textarea {
+            min-height: 140px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .char-counter {
+            color: #888;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .char-counter.warning {
+            color: #F72585;
+            font-weight: 700;
+        }
+
+        .submit-comment-btn {
+            background: linear-gradient(135deg, #4361EE, #4CC9F0);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .submit-comment-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .submit-comment-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Список комментариев */
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .comment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #F0F4FF;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .comment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.15);
+            border-color: #4361EE;
+        }
+
+        /* Заголовок комментария */
+        .comment-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #F8F9FA;
+        }
+
+        .comment-author-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4361EE, #4CC9F0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
+        }
+
+        .author-details {
+            flex: 1;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-badge {
+            background: #E8F4FF;
+            color: #4361EE;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
+        .comment-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .comment-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .comment-faculty {
+            color: #666;
+            background: #F8F9FA;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Контент комментария */
+        .comment-content {
+            color: #444;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            padding-left: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .comment-content {
+                padding-left: 0;
+            }
+        }
+
+        /* Действия с комментарием */
+        .comment-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .like-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .like-btn {
+            background: #FFF5F7;
+            border: 2px solid #FFE8EC;
+            color: #F72585;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .like-btn:hover {
+            background: #FFE8EC;
+            transform: scale(1.05);
+        }
+
+        .like-btn.liked {
+            background: #F72585;
+            color: white;
+            border-color: #F72585;
+        }
+
+        .like-btn.liked:hover {
+            background: #E01A73;
+        }
+
+        .like-count {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .reply-btn, .edit-btn, .delete-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reply-btn:hover {
+            background: #F0F4FF;
+            color: #4361EE;
+        }
+
+        .edit-btn:hover {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        .delete-btn:hover {
+            background: #F8D7DA;
+            color: #721C24;
+        }
+
+        /* Ответы на комментарии */
+        .comment-replies {
+            margin-left: 60px;
+            margin-top: 20px;
+            padding-left: 20px;
+            border-left: 3px solid #F0F4FF;
+        }
+
+        @media (max-width: 768px) {
+            .comment-replies {
+                margin-left: 20px;
+                padding-left: 15px;
+            }
+        }
+
+        .reply-card {
+            background: #F8F9FA;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #E8F4FF;
+            transition: all 0.2s;
+        }
+
+        .reply-card:hover {
+            background: #F0F4FF;
+            border-color: #4361EE;
+        }
+
+        .reply-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .reply-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reply-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CC9F0, #7209B7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .reply-content {
+            color: #555;
+            line-height: 1.6;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            padding-left: 46px;
+        }
+
+        @media (max-width: 768px) {
+            .reply-content {
+                padding-left: 0;
+            }
+        }
+
+        /* Форма ответа */
+        .reply-form-container {
+            background: #F8F9FA;
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 2px dashed #E0E0E0;
+            transition: all 0.2s;
+            display: none;
+        }
+
+        .reply-form-container.active {
+            display: block;
+            border-color: #4361EE;
+            background: white;
+        }
+
+        .reply-form-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .reply-form-header h4 {
+            color: #4361EE;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .close-reply-form {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-reply-form:hover {
+            background: #F8F9FA;
+            color: #F72585;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            resize: vertical;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .reply-form textarea:focus {
+            outline: none;
+            border-color: #4361EE;
+        }
+
+        .reply-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Индикатор загрузки */
+        .comment-loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4361EE;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        /* Анимации */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .comment-card {
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes highlightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 201, 240, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0); }
+        }
+
+        .comment-highlighted {
+            animation: highlightPulse 2s ease-in-out;
+            border-color: #4CC9F0;
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+        }
+
+        /* Модальные окна */
         .success-modal {
             position: fixed;
             top: 0;
@@ -462,6 +1247,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(4px);
         }
 
         .success-content {
@@ -471,6 +1257,7 @@
             max-width: 500px;
             width: 90%;
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .success-icon {
@@ -479,7 +1266,40 @@
             margin-bottom: 20px;
         }
 
-        /* Анимации */
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.error {
+            background: #F72585;
+            color: white;
+            border-left: 4px solid #E01A73;
+        }
+
+        .notification.success {
+            background: #4CC9F0;
+            color: white;
+            border-left: 4px solid #3AA8D8;
+        }
+
+        .notification.warning {
+            background: #FFC107;
+            color: #333;
+            border-left: 4px solid #E0A800;
+        }
+
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -502,33 +1322,197 @@
             }
         }
 
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4CC9F0;
-            color: white;
-            padding: 15px 25px;
+        /* Информационные блоки */
+        .info-box {
+            background: #E8F4FF;
+            color: #4361EE;
+            padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 10000;
-            animation: slideIn 0.3s ease-out;
-            max-width: 300px;
+            margin: 20px 0;
+            border-left: 4px solid #4361EE;
+        }
+
+        .info-box p {
+            margin: 0;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-            .notification.error {
-                background: #F72585;
-            }
+        /* Пагинация комментариев */
+        .comments-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
 
-            .notification.success {
-                background: #4CC9F0;
-            }
+        .pagination-btn {
+            background: #F8F9FA;
+            color: #4361EE;
+            border: 2px solid #E0E0E0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #4361EE;
+            color: white;
+            border-color: #4361EE;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .page-number {
+            background: #F8F9FA;
+            color: #666;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-number:hover {
+            background: #E0E0E0;
+        }
+
+        .page-number.active {
+            background: #4361EE;
+            color: white;
+        }
+
+        /* Сообщение "Нет комментариев" */
+        .no-comments-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .no-comments-message .icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #F8F9FA;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .no-comments-message i {
+            font-size: 2.5rem;
+            color: #CCC;
+        }
+
+        .no-comments-message h3 {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        /* Сообщения об ошибках */
+        .error-message {
+            background: #F8D7DA;
+            color: #721C24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #F5C6CB;
+            display: none;
+        }
+
+        .success-message-small {
+            background: #D4EDDA;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #C3E6CB;
+            display: none;
+        }
+
+        /* Поле ввода с автозаполнением профиля */
+        .profile-autofill {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: #E8F4FF;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .profile-autofill.visible {
+            display: flex;
+        }
+
+        .profile-autofill img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .profile-autofill span {
+            font-weight: 600;
+            color: #4361EE;
+        }
+
+        .use-profile-btn {
+            background: #4361EE;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        /* Поле для анонимного комментария */
+        .anonymous-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .anonymous-option input {
+            width: auto;
+        }
+
+        .anonymous-option label {
+            font-weight: normal;
+            color: #666;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
+    <!-- Навигация -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo">
@@ -536,20 +1520,28 @@
                 <span>CampusHub</span>
             </a>
             <div class="nav-links">
-                <a href="index.html">Проекты</a>
-                <a href="create.html" class="btn-create">Создать проект</a>
+                <a href="index.html" style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-project-diagram"></i> Проекты
+                </a>
+                <a href="create.html" class="btn-create" style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-plus-circle"></i> Создать проект
+                </a>
+                <a href="profile.html" style="background: #4361EE; color: white; padding: 10px 20px; border-radius: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user-circle"></i> Профиль
+                </a>
             </div>
         </div>
     </nav>
 
     <main class="project-container">
+        <!-- Заголовок проекта -->
         <div class="project-header">
             <div class="project-image" id="projectImage">
                 <div class="project-status">
-                    <span id="projectStatus"></span>
+                    <span id="projectStatus">Загрузка...</span>
                 </div>
             </div>
-            <h1 class="project-title" id="projectTitle">Загрузка...</h1>
+            <h1 class="project-title" id="projectTitle">Загрузка проекта...</h1>
             <div class="project-meta">
                 <div class="project-meta-item">
                     <i class="fas fa-user"></i>
@@ -561,17 +1553,32 @@
                 </div>
                 <div class="project-meta-item">
                     <i class="fas fa-calendar"></i>
-                    <span id="projectDate">Дата</span>
+                    <span id="projectDate">Дата создания</span>
+                </div>
+                <div class="project-meta-item">
+                    <i class="fas fa-tag"></i>
+                    <span id="projectCategory">Категория</span>
                 </div>
             </div>
         </div>
 
+        <!-- Основной контент -->
         <div class="project-content">
+            <!-- Описание проекта -->
             <div class="project-description" id="projectDescription">
-                <p>Загрузка описания проекта...</p>
+                <h3>О проекте</h3>
+                <p id="projectDescriptionContent">Загрузка описания...</p>
+
+                <h3>Цели и задачи</h3>
+                <div id="projectGoals"></div>
+
+                <h3>Почему это важно</h3>
+                <div id="projectImportance"></div>
             </div>
 
+            <!-- Сайдбар поддержки -->
             <div class="support-sidebar">
+                <!-- Прогресс сбора -->
                 <div class="progress-section">
                     <div class="progress-numbers">
                         <span id="collectedAmount">0 ₽</span>
@@ -586,8 +1593,12 @@
                     </div>
                 </div>
 
+                <!-- Форма поддержки -->
                 <div class="support-form">
-                    <h3 style="color: #4361EE; margin-bottom: 20px;">Поддержать проект</h3>
+                    <h3>Поддержать проект</h3>
+                    <p style="color: #666; margin-bottom: 20px; font-size: 0.95rem;">
+                        Выберите сумму или введите свою
+                    </p>
 
                     <div class="amount-options" id="amountOptions">
                         <button class="amount-btn" data-amount="100">100 ₽</button>
@@ -595,19 +1606,18 @@
                         <button class="amount-btn" data-amount="1000">1 000 ₽</button>
                         <button class="amount-btn" data-amount="2000">2 000 ₽</button>
                         <button class="amount-btn" data-amount="5000">5 000 ₽</button>
-                        <button class="amount-btn" data-amount="custom">Другая</button>
+                        <button class="amount-btn" data-amount="custom">Другая сумма</button>
                     </div>
-
 
                     <div class="custom-amount" id="customAmountSection" style="display: none;">
                         <div class="currency">₽</div>
                         <input type="number" id="customAmount" placeholder="Введите сумму" min="10" max="1000000">
                     </div>
 
-
-                    <div style="margin: 20px 0; padding: 15px; background: #E8F4FF; border-radius: 10px;">
-                        <p style="margin: 0; color: #4361EE; font-size: 0.9rem;">
-                            <i class="fas fa-info-circle"></i> Это демо-режим. В реальной версии здесь будет переход к оплате.
+                    <div class="info-box">
+                        <p>
+                            <i class="fas fa-info-circle"></i>
+                            Это демо-режим. В реальной версии здесь будет переход к оплате.
                         </p>
                     </div>
 
@@ -616,87 +1626,150 @@
                     </button>
                 </div>
 
+                <!-- Последние сторонники -->
                 <div class="supporters-list" id="supportersList">
                     <div class="supporters-header">
-                        <h4 style="color: #333; margin: 0;">Недавно поддержали</h4>
+                        <h4>Недавно поддержали</h4>
                         <span class="supporters-counter" id="supportersCounter">
                             <span id="supportersCountDisplay">0</span> человек
                         </span>
                     </div>
 
                     <div class="recent-supporters" id="recentSupporters">
+                        <!-- Сторонники будут загружены через JavaScript -->
                     </div>
 
                     <div class="view-all-supporters" id="viewAllSupporters" style="display: none;">
                         <button class="show-all-btn" id="showAllSupportersBtn">
-                            <i class="fas fa-list"></i> Показать всех
+                            <i class="fas fa-list"></i> Показать всех сторонников
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Команда проекта -->
         <div class="team-section" id="teamSection" style="display: none;">
-            <h2 style="color: #4361EE; margin-bottom: 10px;">Команда проекта</h2>
-            <p style="color: #666; margin-bottom: 20px;">Над проектом работают:</p>
+            <h2>Команда проекта</h2>
+            <p>Над проектом работают эти замечательные люди:</p>
             <div class="team-grid" id="teamGrid">
+                <!-- Команда будет загружена через JavaScript -->
             </div>
         </div>
 
+        <!-- Бюджет проекта -->
         <div class="team-section" id="budgetSection">
-            <h2 style="color: #4361EE; margin-bottom: 10px;">На что пойдут средства?</h2>
+            <h2>На что пойдут средства?</h2>
+            <p>Детальное распределение бюджета проекта:</p>
             <div id="budgetItems">
+                <!-- Бюджет будет загружен через JavaScript -->
             </div>
         </div>
 
-            <!-- Раздел комментариев -->
-        <div class="team-section" id="commentsSection">
-            <h2 style="color: #4361EE; margin-bottom: 10px;">Комментарии</h2>
-            <p style="color: #666; margin-bottom: 20px;">Обсуждение проекта</p>
+        <!-- ============================================
+           СЕКЦИЯ КОММЕНТАРИЕВ
+           ============================================ -->
+        <div class="comments-container" id="commentsSection">
+            <div class="comments-header">
+                <div>
+                    <h2>Обсуждение проекта</h2>
+                    <p style="color: #666; margin-top: 5px; font-size: 1rem;">
+                        Задавайте вопросы, делитесь мнениями и поддерживайте обсуждение
+                    </p>
+                </div>
+                <div class="comments-count" id="commentsCount">Загрузка...</div>
+            </div>
 
             <!-- Форма добавления комментария -->
-            <div class="comment-form-card" style="background: white; border-radius: 16px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
-                <h3 style="color: #333; margin-bottom: 15px;">Оставить комментарий</h3>
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <input type="text" id="commentAuthor" placeholder="Ваше имя" style="width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 8px; margin-bottom: 10px;">
-                    <textarea id="commentContent" placeholder="Ваш комментарий..." rows="3" style="width: 100%; padding: 12px; border: 2px solid #E0E0E0; border-radius: 8px; resize: vertical;"></textarea>
+            <div class="add-comment-card">
+                <div class="add-comment-header">
+                    <h3>Оставить комментарий</h3>
+                    <p>Ваш комментарий будет виден всем пользователям</p>
                 </div>
-                <button id="submitCommentBtn" style="background: #4361EE; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                    <i class="fas fa-paper-plane"></i> Отправить комментарий
-                </button>
-                <div id="commentError" style="color: #F72585; margin-top: 10px; display: none;"></div>
+
+                <!-- Автозаполнение профиля -->
+                <div class="profile-autofill" id="profileAutofill">
+                    <i class="fas fa-user-circle" style="color: #4361EE; font-size: 1.5rem;"></i>
+                    <span id="profileAutofillName"></span>
+                    <button class="use-profile-btn" id="useProfileBtn">
+                        Использовать
+                    </button>
+                </div>
+
+                <form class="add-comment-form" id="commentForm">
+                    <div class="form-row">
+                        <div class="form-input-group">
+                            <label for="commentAuthor">Ваше имя *</label>
+                            <input type="text" id="commentAuthor" placeholder="Как вас зовут?" required>
+                        </div>
+                        <div class="form-input-group">
+                            <label for="commentFaculty">Факультет (опционально)</label>
+                            <input type="text" id="commentFaculty" placeholder="Ваш факультет">
+                        </div>
+                    </div>
+
+                    <div class="form-input-group">
+                        <label for="commentContent">Комментарий *</label>
+                        <textarea id="commentContent" class="comment-textarea"
+                                  placeholder="Напишите ваш комментарий здесь... Можно использовать Markdown-разметку"
+                                  rows="5" required></textarea>
+                        <div class="char-counter" id="charCounter">0/2000</div>
+                    </div>
+
+                    <div class="form-footer">
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <div class="anonymous-option">
+                                <input type="checkbox" id="anonymousComment">
+                                <label for="anonymousComment">Анонимно</label>
+                            </div>
+                            <label class="form-checkbox" style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="saveProfile">
+                                <span style="font-size: 0.9rem;">Запомнить меня</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="submit-comment-btn" id="submitCommentBtn">
+                            <i class="fas fa-paper-plane"></i> Опубликовать комментарий
+                        </button>
+                    </div>
+                </form>
+
+                <div class="error-message" id="commentError"></div>
+                <div class="success-message-small" id="commentSuccess"></div>
             </div>
 
             <!-- Список комментариев -->
-            <div id="commentsList">
-                <div class="comment-loading" style="text-align: center; padding: 30px;">
-                    <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #4361EE; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px;"></div>
-                    <p>Загрузка комментариев...</p>
+            <div class="comments-list" id="commentsList">
+                <div class="comment-loading">
+                    <div class="loading-spinner"></div>
+                    <p style="color: #666; margin-top: 10px;">Загрузка комментариев...</p>
                 </div>
-                <style>
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                </style>
             </div>
 
-            <!-- Кнопка "Показать ещё" -->
-            <div id="loadMoreContainer" style="text-align: center; margin-top: 30px; display: none;">
-                <button id="loadMoreCommentsBtn" style="background: #F8F9FA; color: #4361EE; border: 2px solid #E0E0E0; padding: 12px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                    <i class="fas fa-chevron-down"></i> Показать ещё комментарии
+            <!-- Пагинация комментариев -->
+            <div class="comments-pagination" id="commentsPagination" style="display: none;">
+                <button class="pagination-btn" id="prevCommentsBtn" disabled>
+                    <i class="fas fa-chevron-left"></i> Назад
+                </button>
+                <div class="page-numbers" id="commentPages"></div>
+                <button class="pagination-btn" id="nextCommentsBtn">
+                    Вперед <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
 
             <!-- Сообщение "Нет комментариев" -->
-            <div id="noCommentsMessage" style="text-align: center; padding: 40px; color: #888; display: none;">
-                <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+            <div class="no-comments-message" id="noCommentsMessage" style="display: none;">
+                <div class="icon">
+                    <i class="fas fa-comments"></i>
+                </div>
                 <h3>Пока нет комментариев</h3>
-                <p>Будьте первым, кто оставит комментарий!</p>
+                <p style="color: #666; max-width: 400px; margin: 0 auto;">
+                    Будьте первым, кто оставит комментарий! Задайте вопрос или поделитесь своим мнением.
+                </p>
             </div>
         </div>
     </main>
 
+    <!-- Модальное окно всех сторонников -->
     <div class="all-supporters-modal" id="allSupportersModal">
         <div class="all-supporters-content">
             <div class="all-supporters-header">
@@ -706,27 +1779,71 @@
                 </button>
             </div>
             <div class="all-supporters-list" id="allSupportersList">
+                <!-- Все сторонники будут загружены через JavaScript -->
             </div>
         </div>
     </div>
 
+    <!-- Модальное окно успешной поддержки -->
     <div class="success-modal" id="successModal">
         <div class="success-content">
             <div class="success-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
             <h2 style="color: #4361EE; margin-bottom: 15px;">Спасибо за поддержку!</h2>
-            <p id="successMessage">Вы успешно поддержали проект на <strong>0 ₽</strong>.</p>
-            <p style="color: #666; margin: 20px 0;">В реальной версии здесь был бы переход к оплате.</p>
-            <button class="btn-support-large" id="closeModalBtn" style="background: #4361XX; margin-top: 20px;">
-                Продолжить
+            <p id="successMessage" style="color: #666; margin-bottom: 20px; font-size: 1.1rem;">
+                Вы успешно поддержали проект на <strong style="color: #F72585;">0 ₽</strong>.
+            </p>
+            <p style="color: #888; margin: 20px 0; font-size: 0.95rem;">
+                <i class="fas fa-info-circle"></i> В реальной версии здесь был бы переход к оплате.
+            </p>
+            <button class="btn-support-large" id="closeModalBtn" style="background: linear-gradient(135deg, #4361EE, #4CC9F0); margin-top: 10px;">
+                <i class="fas fa-check"></i> Продолжить
             </button>
         </div>
     </div>
-    
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="success-modal" id="deleteConfirmModal" style="display: none;">
+        <div class="success-content">
+            <div class="success-icon" style="color: #F72585;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 style="color: #F72585; margin-bottom: 15px;">Подтверждение удаления</h2>
+            <p id="deleteMessage" style="color: #666; margin-bottom: 20px; font-size: 1.1rem;">
+                Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                <button id="confirmDeleteBtn" style="background: #F72585; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                    <i class="fas fa-trash"></i> Удалить
+                </button>
+                <button id="cancelDeleteBtn" style="background: #F8F9FA; color: #666; border: 1px solid #E0E0E0; padding: 12px 24px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script src="js/config.js"></script>
     <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/project.js"></script>
+
+    <script>
+        // Инициализация EmailJS
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.emailjsConfig && window.emailjsConfig.userId) {
+                try {
+                    emailjs.init(window.emailjsConfig.userId);
+                    console.log('EmailJS инициализирован');
+                } catch (error) {
+                    console.warn('Ошибка инициализации EmailJS:', error);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
